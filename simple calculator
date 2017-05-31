@@ -1,0 +1,40 @@
+package random;
+import java.util.Scanner;
+public class Test {
+    public static void main(String[] args){
+        
+        Scanner in = new Scanner(System.in);
+        
+        System.out.println("Type 1 for addition");//1 for addition operation
+        System.out.println("Type 2 for subtraction");//2 for subtraction operation
+        System.out.println("Type 3 for multiplication");//3 for multiplication operation
+        System.out.println("Type 4 for division");// 4 for division operation
+        
+        int i = in.nextInt();//read wich operation the user entered
+        
+        System.out.println("type the first number: ");
+        double num1 = in.nextDouble();//read first number
+        
+        System.out.println("Type the second number: ");
+        double num2 = in.nextDouble();//read second number
+        
+        //if else arrangements for each operation
+        if(i==1){
+            System.out.println(num1+num2);
+        }else{
+            if(i==2){
+                System.out.println(num1-num2);
+                }else{
+                    if(i==3){
+                        System.out.println(num1*num2);
+                    }else{
+                        if(i==4){
+                            System.out.println(num1/num2);
+                        }
+                    }
+                }
+        }
+    }
+
+}
+//java code
