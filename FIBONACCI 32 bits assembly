@@ -1,0 +1,23 @@
+
+			mov.w	#0,R10
+			mov.w	#0,R8
+			mov.w	#1,R7
+			call	#FIB
+			jmp		$
+
+FIB:
+			add.w	R10,R7
+			jc		CONC   ; a partir do momento em que o carry é gerado a representação numerica do R7 está deturpada
+			mov.w	R7,R8
+			mov.w	R10,R7
+			mov.w	R8,R10
+
+			jmp 	FIB
+
+CONC:
+			addc	#0,R11 ; maior valor possivel representado corretamente
+			jc		end
+			jmp		FIB
+
+end:
+			RET
