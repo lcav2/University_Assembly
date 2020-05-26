@@ -1,3 +1,3 @@
-# first-bb
-for a start
+# portfolio
+skills
 ...
