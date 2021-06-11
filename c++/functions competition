@@ -23,25 +23,25 @@ void funcoes(int H){
 	
 	//Rafael condition
 	if(Rafael>Beto && Rafael>Carlos){
-		cout<<"Rafael ganhou"<<endl;
+		cout<<"Rafael won"<<endl;
 	}
 	else{
 	//Beto condition
 	if(Beto>Rafael && Beto>Carlos){
-		cout<<"Beto ganhou"<<endl;
+		cout<<"Beto won"<<endl;
 	}
 			
 	else{
 	//Carlos condition
 	if(Carlos>Beto && Carlos>Rafael){
-		cout<<"Carlos ganhou"<<endl;
+		cout<<"Carlos won"<<endl;
 }
 }
 }
 }
 	else{
 	//if both numbers entered were 0	
-		cout<<"não há vencedor"<<endl;		
+		cout<<"There are no winners"<<endl;		
 	}	
 }	
 }
