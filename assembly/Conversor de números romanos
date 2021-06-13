@@ -1,0 +1,145 @@
+NUM 		.equ 3999		;Indicar número a ser convertido
+;
+			mov.w 		#NUM,R5 		;R5 = número a ser convertido
+			mov.w 		#RESP,R6 		;R6 = ponteiro para escrever a resposta
+
+			call 		#ALG_ROM 		;chamar subrotina
+			nop
+			jmp 		$ 				;travar execução
+			nop 					;exigido pelo montador
+
+
+ALG_ROM:							; subrotina de conversão
+									; for - percorre algarismos arabicos
+			mov.w 	#0,R7 			; R7 = posicao na tabela de Arabicos e Romanos
+
+FOR_COMP: 	cmp.w 	#26,R7 			; 0,2,4,...,22,24 (algarismos na tabela - stop if R7==26)
+			jz 		for_end     	; Z = 1 quando R7 = 26
+
+while_loop:
+			cmp.w	T_ARAB(R7),R5	;   while num >= algarismos arabicos
+			jl	 	while_done 		;
+			sub.w 	T_ARAB(R7),R5	; R5 = R5 -T_ARAB(R7)
+			call 	#IMPRIME		;
+			jmp 	while_loop 		;
+while_done: 						; 	end_while
+
+									; atualiza a posição R7
+			incd.w	R7
+			jmp 	FOR_COMP		; retorno do FOR
+for_end:							; end_for
+			mov.b 	#0x00,0(R6)		; imprime "0" no final de RESP
+			ret						; retorno/fim da subrotina ALG_ROM
+
+
+IMPRIME: 			; subrotina para localizar o código ASCII e escrever o Algarismo Romano em R6
+
+switch:
+			cmp.w	#0,R7
+			jz		case0
+			cmp.w	#2,R7
+			jz		case2
+			cmp.w	#4,R7
+			jz		case4
+			cmp.w	#6,R7
+			jz		case6
+			cmp.w	#8,R7
+			jz		case8
+			cmp.w	#10,R7
+			jz		case10
+			cmp.w	#12,R7
+			jz		case12
+			cmp.w	#14,R7
+			jz		case14
+			cmp.w	#16,R7
+			jz		case16
+			cmp.w	#18,R7
+			jz		case18
+			cmp.w	#20,R7
+			jz		case20
+			cmp.w	#22,R7
+			jz		case22
+			cmp.w	#24,R7
+			jz		case24
+			jmp 	default
+case0:							;imprime: M
+			mov.b	#0x4D,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case2:							;imprime: CM
+			mov.b	#0x43,0(R6)
+			inc.w	R6
+			mov.b	#0x4D,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case4:							;imprime: D
+			mov.b	#0x44,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case6:							;imprime: CD
+			mov.b	#0x43,0(R6)
+			inc.w	R6
+			mov.b	#0x44,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case8:							;imprime: C
+			mov.b	#0x43,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case10:							;imprime: XC
+			mov.b	#0x58,0(R6)
+			inc.w	R6
+			mov.b	#0x43,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case12:							;imprime: L
+			mov.b	#0x4C,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case14:							;imprime: XL
+			mov.b	#0x58,0(R6)
+			inc.w	R6
+			mov.b	#0x4C,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case16:							;imprime: X
+			mov.b	#0x58,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case18:							; imprime IX
+			mov.b 	#0x49,0(R6)
+			inc.w	R6
+			mov.b 	#0x58,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case20:							;imprime: V
+			mov.b	#0x56,0(R6)
+			inc.w	R6
+			jmp		end_switch
+case22:							; imprime IV
+			mov.b 	#0x49,0(R6)
+			inc.w	R6
+			mov.b 	#0x56,0(R6)
+			inc.w	R6
+			jmp		end_switch
+
+case24:							;imprime: I
+			mov.b 	#0x49,0(R6)
+			inc.w	R6
+			jmp		end_switch
+
+default:
+end_switch:
+			ret						; retorno da subrotina IMPRIME
+
+
+		.data
+; Local para armazenar a resposta (RESP = 0x2400)
+RESP: 	.byte 	"RRRRRRRRRRRRRRRRRR",0
+
+; posição (R7) 	    		   0	  2	     4		6	  8	   10    12    14    16    18    20     22    24
+; numeros ARABICOS em hex [0x3E8, 0x384, 0x1F4, 0x190, 0x64, 0x5A, 0x32, 0x28, 0x0A, 0x09, 0x05,  0x04, 0x01]
+; numeros ARABICOS em dec   1000,   900,   500,   400,  100,   90,   50,   40,   10,    9,    5,     4,    1
+; numeros ROMANOS         [  "M",  "CM",   "D",  "CD",  "C", "XC",  "L", "XL",  "X", "IX",  "V",  "IV",  "I"]
+; Tabela ASCII em hex       0x4D,      ,  0x44,      , 0x43,     , 0x4C,     , 0x58,     , 0x56,      , 0x49
+T_ARAB: 	.word          0x3E8, 0x384, 0x1F4, 0x190, 0x64, 0x5A, 0x32, 0x28, 0x0A, 0x09, 0x05,  0x04, 0x01
